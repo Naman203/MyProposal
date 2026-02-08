@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Propose Day</title>
+
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    position: relative;
+    transition: background 1s ease;
+  }
+
+  .bg-name {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 84px;
+    font-weight: 900;
+    letter-spacing: 10px;
+    padding: 20px;
+    background: linear-gradient(180deg, #ff758c, #ff4d6d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: blink 2.2s infinite;
+    user-select: none;
+    pointer-events: none;
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+  .bg-left { left: 20px; }
+  .bg-right { right: 20px; }
+  @keyframes blink { 0%,100%{opacity:0.25;} 50%{opacity:0.55;} }
+
+  .banner {
+    position: fixed;
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(90deg, #ff4d6d, #c9184a);
+    z-index: 10;
+    letter-spacing: 2px;
+  }
+  .banner.bottom {
+    bottom: 0;
+    font-size: 16px;
+    background: rgba(0,0,0,0.4);
+    letter-spacing: 1px;
+  }
+
+  .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 45px 55px;
+    text-align: center;
+    border-radius: 30px;
+    backdrop-filter: blur(14px);
+    background: linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.12));
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+    z-index: 5;
+    min-width: 360px;
+    transition: opacity 1s ease;
+  }
+
+  h1 { color: #fff; margin-bottom: 14px; font-size: 28px; }
+  h2 { color: #ffd6e0; font-weight: normal; margin-bottom: 32px; font-size: 20px; }
+
+  .btn-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin-top: 20px;
+    position: relative;
+  }
+
+  button {
+    padding: 14px 34px;
+    font-size: 18px;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  #yesBtn {
+    background: #ff4d6d;
+    color: white;
+    box-shadow: 0 10px 25px rgba(255,77,109,0.6);
+  }
+  #yesBtn:hover { transform: scale(1.12); }
+
+  #yesBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  #noBtn {
+    background: #adb5bd;
+    color: #333;
+    position: relative;
+    z-index: 2;
+    transition: left 0.4s ease, top 0.4s ease;
+  }
+
+  .message-box {
+    margin-top: 18px;
+    padding: 12px 18px;
+    border-radius: 18px;
+    display: none;
+  }
+
+  .countdown {
+    font-size: 100px; /* increased */
+    color: #fff;
+    font-weight: bold;
+    animation: pop 0.8s ease forwards;
+  }
+
+  @keyframes pop {
+    0% { opacity: 0; transform: scale(0.4); }
+    50% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  .love {
+    display: none;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #240b36;
+    z-index: 20;
+    text-align: center;
+    color: white;
+    padding-top: 50px;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  .love.show {
+    display: block;
+    opacity: 1;
+  }
+
+  .love h1 {
+    font-size: 62px;
+    margin: 12px 0;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: showName 2s forwards;
+  }
+  .love h2 {
+    font-size: 40px;
+    margin: 10px 0;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: showName 2.2s forwards;
+  }
+
+  .love img {
+    width: 360px;
+    margin-top: 20px;
+    border-radius: 20px;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: showName 2.6s forwards;
+  }
+
+  .love .caption {
+    margin-top: 18px;
+    font-size: 26px;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: showName 3s forwards;
+  }
+
+  @keyframes showName {
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .rose {
+    position: fixed;
+    top: -40px;
+    font-size: 32px;
+    animation: fall linear forwards;
+    z-index: 21;
+  }
+  @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+  #safeArea {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 440px;
+    height: 280px;
+    pointer-events: none;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-name bg-left" id="bgLeft">SOUMYA</div>
+<div class="bg-name bg-right" id="bgRight">PAWAR</div>
+
+<div class="banner" id="topBanner">Taking my chance for you</div>
+<div class="banner bottom" id="bottomBanner">This question means everything to me ❤️</div>
+
+<div id="safeArea"></div>
+
+<div class="container" id="proposal">
+  <div id="content">
+    <h1>Will you be my Valentine? 💖</h1>
+    <h2>Not just today… but every day 🌹</h2>
+
+    <div class="btn-wrapper">
+      <button id="yesBtn" disabled>YES 💍</button>
+      <button id="noBtn">NO</button>
+    </div>
+
+    <div id="msgBox" class="message-box"></div>
+  </div>
+</div>
+
+<div class="love" id="loveMessage">
+  <h1>SOUMYA PAWAR</h1>
+  <h2>❤️</h2>
+  <h1>NAMAN CHATURVEDI</h1>
+
+  <img src="My_bubu.jpeg" alt="Love Image">
+
+  <div class="caption">I love you 💋💋💋</div>
+</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const proposal = document.getElementById("proposal");
+const content = document.getElementById("content");
+const safeArea = document.getElementById("safeArea");
+const loveMessage = document.getElementById("loveMessage");
+const msgBox = document.getElementById("msgBox");
+const bgLeft = document.getElementById("bgLeft");
+const bgRight = document.getElementById("bgRight");
+
+let dodgeCount = 0;
+let yesClicks = 0;
+let escaped = false;
+let yesUnlocked = false;
+
+// Move NO inside the safe area ONLY
+function moveNo() {
+  const safe = safeArea.getBoundingClientRect();
+  const btnW = noBtn.offsetWidth;
+  const btnH = noBtn.offsetHeight;
+
+  const x = Math.random() * (safe.width - btnW);
+  const y = Math.random() * (safe.height - btnH);
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
+
+noBtn.addEventListener("mouseenter", () => {
+  if (!escaped) {
+    noBtn.style.position = "absolute";
+    noBtn.style.left = noBtn.offsetLeft + "px";
+    noBtn.style.top = noBtn.offsetTop + "px";
+    escaped = true;
+  }
+
+  dodgeCount++;
+  yesUnlocked = true;
+  yesBtn.disabled = false;
+
+  moveNo();
+});
+
+yesBtn.addEventListener("click", () => {
+  yesClicks++;
+
+  if (yesClicks === 1) {
+    msgBox.style.display = "block";
+    msgBox.innerText = "I am not that easy to get, think again girl 😏";
+    return;
+  }
+  if (yesClicks === 2) {
+    msgBox.style.display = "block";
+    msgBox.innerText = "Nice try… but you must chase me first 😈";
+    yesBtn.disabled = true;
+    yesUnlocked = false;
+    return;
+  }
+
+  // Final YES
+  showFinalSequence();
+}
+
+);
+
+function showFinalSequence() {
+  content.innerHTML = '<div id="finalMsg" class="message-box"></div>';
+  const finalMsg = document.getElementById("finalMsg");
+
+  finalMsg.style.display = "block";
+  finalMsg.style.fontSize = "34px";
+  finalMsg.style.background = "#ff4d6d";
+  finalMsg.style.color = "#fff";
+  finalMsg.style.padding = "20px 18px";
+  finalMsg.style.borderRadius = "20px";
+
+  finalMsg.innerText = "Your choice baby";
+
+  setTimeout(() => {
+    finalMsg.style.background = "#1f8a70";
+    finalMsg.style.color = "#fff";
+    finalMsg.innerText = "Get ready now";
+
+    setTimeout(() => {
+      // **Hide both background texts before countdown**
+      bgLeft.style.display = "none";
+      bgRight.style.display = "none";
+
+      startCountdown();
+    }, 3000); // 3 seconds delay for second message
+  }, 2000); // 2 seconds delay for first message
+}
+
+function startCountdown() {
+  content.innerHTML = '<div class="countdown" id="count">3</div>';
+  let counter = 3;
+  const countEl = document.getElementById("count");
+
+  const countdown = setInterval(() => {
+    counter--;
+    countEl.innerText = counter;
+
+    if (counter === 0) {
+      clearInterval(countdown);
+      proposal.style.opacity = 0;
+      setTimeout(() => {
+        document.body.style.background = "linear-gradient(135deg, #240b36, #0f0c29)";
+        proposal.style.display = "none";
+        loveMessage.classList.add("show");
+        startRoseShower();
+      }, 1000);
+    }
+  }, 1000);
+}
+
+function startRoseShower() {
+  setInterval(() => {
+    const rose = document.createElement("div");
+    rose.className = "rose";
+    rose.innerText = "🌹";
+    rose.style.left = Math.random() * window.innerWidth + "px";
+    rose.style.animationDuration = (6 + Math.random() * 6) + "s";
+    document.body.appendChild(rose);
+    setTimeout(() => rose.remove(), 11000);
+  }, 400);
+}
+</script>
+
+</body>
+</html>
